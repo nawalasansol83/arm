@@ -2,17 +2,33 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "environment":{
+            "type": "string"
+        },
+        "regionCode":{
+            "defaultValue": "CaC",
+            "type": "string"
+        },
+        "p_subnetName":{
+            "type": "string"
+        },
+        "p_addressPrefix":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "v_virtualnetworkName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]",    
     },
     "resources": [
         {
             "apiVersion": "2018-04-01",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "VNET-CaC-DEV-CoreNetwork/default2",
+            "name": "[concat(variables('v_virtualnetworkName'),'/',parameters('p_subnetName'))]",
             "location": "[resourcegroup().location]",
             "properties": {
-              "addressPrefix": "10.40.5.0/24"
+              "addressPrefix": "[parameters('p_addressPrefix')]"
             }
-          },
+          }
     ],
     "outputs": {
       "boo": {
