@@ -1,0 +1,63 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment":{
+            "type": "string"
+        },
+        "regionCode":{
+            "defaultValue": "CaC",
+            "type": "string"
+        },
+        "p_SecondOctet":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "v_virtualnetworkName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-04-01",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(variables('v_virtualnetworkName'),'/','Subnet-',parameters('regionCode'),'-',parameters('environment'),'-VPN')]",
+            "location": "[resourcegroup().location]",
+            "properties": {
+              "addressPrefix": "[concat('10.',parameters('p_SecondOctet'),'.5.0/28')]"
+            }
+          },
+          {
+            "apiVersion": "2018-04-01",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(variables('v_virtualnetworkName'),'/','Subnet-',parameters('regionCode'),'-',parameters('environment'),'-FrontEnd')]",
+            "location": "[resourcegroup().location]",
+            "properties": {
+              "addressPrefix": "[concat('10.',parameters('p_SecondOctet'),'.6.0/28')]"
+            }
+          },
+          {
+            "apiVersion": "2018-04-01",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(variables('v_virtualnetworkName'),'/','Subnet-',parameters('regionCode'),'-',parameters('environment'),'-MiddleTier')]",
+            "location": "[resourcegroup().location]",
+            "properties": {
+              "addressPrefix": "[concat('10.',parameters('p_SecondOctet'),'.7.0/27')]"
+            }
+          },
+          {
+            "apiVersion": "2018-04-01",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(variables('v_virtualnetworkName'),'/','Subnet-',parameters('regionCode'),'-',parameters('environment'),'-Database')]",
+            "location": "[resourcegroup().location]",
+            "properties": {
+              "addressPrefix": "[concat('10.',parameters('p_SecondOctet'),'.8.0/28')]"
+            }
+          }                          
+    ],
+    "outputs": {
+      "boo": {
+        "type": "string",
+        "value": "boo"
+      }
+    }
+  }
