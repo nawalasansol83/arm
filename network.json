@@ -7,11 +7,11 @@
         {
             "apiVersion": "2018-04-01",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "VNET-CaC-UAT-CoreNetwork/default2",
+            "name": "VNET-CaC-DEV-CoreNetwork/default2",
             "resourceGroup":"RG-CaC-DEV-Network",
             "location": "canadacentral",
             "properties": {
-              "addressPrefix": "10.40.5.0/28"
+              "addressPrefix": "10.40.5.0/24"
             }
           },
     ],
