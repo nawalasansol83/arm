@@ -17,7 +17,7 @@
         }
     },
     "variables": {
-        "v_virtualnetworkName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]",    
+        "v_virtualnetworkName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]"
     },
     "resources": [
         {
