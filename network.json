@@ -17,13 +17,14 @@
         }
     },
     "variables": {
-        "v_virtualnetworkName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]"
+        "v_virtualnetworkName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]",
+        "v_newsubnetName":"[concat('Subnet-',parameters('regionCode'),'-',parameters('environment'),parameters('p_subnetName'))]"    
     },
     "resources": [
         {
             "apiVersion": "2018-04-01",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "[concat(variables('v_virtualnetworkName'),'/',parameters('p_subnetName'))]",
+            "name": "[concat(variables('v_virtualnetworkName'),'/',parameters('v_newsubnetName'))]",
             "location": "[resourcegroup().location]",
             "properties": {
               "addressPrefix": "[parameters('p_addressPrefix')]"
