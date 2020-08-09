@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment":{
+            "type": "string"
+        },
+        "regionCode":{
+            "defaultValue": "CaC",
+            "type": "string"
+        },        
+        "webappName":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "v_virtualNetwork":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]",    
+        "v_hostingPlanName":"[concat('HostingPlan-',parameters('regionCode'),'-',parameters('environment'))]",
+        "v_currentStack":"dotnetcore",
+        "v_phpVersion":"OFF",
+        "v_hostingEnvironment":"",
+        "v_alwaysOn":"true",
+        "v_Subscription": "[subscription().id]",
+        "v_errorLink":"[concat('https://', parameters('webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]"
+    },
+    "resources":[
+    {
+        "apiVersion": "2018-11-01",
+        "name": "[parameters('webappname')]",
+        "type": "Microsoft.Web/sites",
+        "location": "[resourceGroup().location]",
+        "tags": {},
+        "dependsOn": [],
+        "properties": {
+            "name": "[parameters('webappname')]",
+            "siteConfig": {
+                "appSettings": [
+                    {
+                        "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
+                        "value": "[variables('v_errorLink')]"
+                    }
+                ],
+                "metadata": [
+                    {
+                        "name": "CURRENT_STACK",
+                        "value": "[variables('v_currentStack')]"
+                    }
+                ],
+                "phpVersion": "[variables('v_phpVersion')]",
+                "alwaysOn": "[variables('v_alwaysOn')]"
+            },
+            "serverFarmId": "[concat('/subscriptions/', variables('v_subscriptionId'),'/resourcegroups/', resourcegroup().name, '/providers/Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]",
+            "clientAffinityEnabled": true
+        }
+    }   
+],
+    "outputs": {
+    }
+}
