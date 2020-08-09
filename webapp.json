@@ -57,7 +57,7 @@
                         {
                             "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
                             "value": "[variables('v_errorLink')]"
-                        }
+                        },
                         {
                             "name": "CURRENT_STACK",
                             "value": "[variables('v_currentStack')]"
