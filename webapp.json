@@ -1,0 +1,99 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment":{
+            "type": "string"
+        },
+        "regionCode":{
+            "defaultValue": "CaC",
+            "type": "string"
+        },        
+        "webappName":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "v_virtualNetwork":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'),'-CoreNetwork')]",    
+        "v_hostingPlanName":"[concat('HostingPlan-',parameters('regionCode'),'-',parameters('environment'))]",
+        "v_currentStack":"dotnetcore",
+        "v_phpVersion":"OFF",
+        "v_hostingEnvironment":"",
+        "v_alwaysOn":"true",
+        "v_Subscription": "[subscription().id]",
+        "v_errorLink":"[concat('https://', parameters('webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]"
+    },
+    "resources": [    
+        {
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('webappName')]",
+            "type": "Microsoft.Web/sites",
+            "comments": "** Azure Web App Provision **",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('microsoft.insights/components/',parameters('webappName'))]",
+                "[concat('Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]"
+            ],
+            "properties": {
+                "name": "[parameters('webappName')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference('microsoft.insights/components/WebApp-CaC-DEV-LenderAPI', '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[reference('microsoft.insights/components/WebApp-CaC-DEV-LenderAPI', '2015-05-01').ConnectionString]"
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_Mode",
+                            "value": "default"
+                        },
+                        {
+                            "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
+                            "value": "[variables('v_errorLink')]"
+                        }
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "[variables('v_currentStack')]"
+                        }
+                    ],
+                    "phpVersion": "[variables('v_phpVersion')]",
+                    "alwaysOn": "[variables('v_alwaysOn')]"
+                },
+                "serverFarmId": "[concat(variables('v_subscription'),'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]",
+                "hostingEnvironment": "[variables('v_hostingEnvironment')]",
+                "clientAffinityEnabled": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('webappName'), '/web')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('webappName'))]"
+            ],
+            "properties": {
+                "ftpsState": "Disabled"
+            }
+        },
+        {
+            "apiVersion": "2015-05-01",
+            "name": "[parameters('webappName')]",
+            "type": "Microsoft.Insights/components",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ApplicationId": "[parameters('webappName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate"
+            }
+        }
+    ],
+    "outputs": {
+    }
+  }
