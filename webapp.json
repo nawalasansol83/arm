@@ -58,7 +58,7 @@
                         },
                         {
                             "name": "OUTPUTVALUE",
-                            "value": "[variables('v_[parameters('environment')]_Sample')]"
+                            "value": "[variables(concat('v_',parameters('environment'),'_Sample'))]"
                         }
                     ],
                     "metadata": [
