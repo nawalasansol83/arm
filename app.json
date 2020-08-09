@@ -48,7 +48,7 @@
                 "phpVersion": "[variables('v_phpVersion')]",
                 "alwaysOn": "[variables('v_alwaysOn')]"
             },
-            "serverFarmId": "[concat('/subscriptions/', variables('v_subscriptionId'),'/resourcegroups/RG-CaC-DEV-Avalanche/providers/Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]",
+            "serverFarmId": "/subscriptions/22a278e1-1407-4157-ac6d-1484a7592bee/resourceGroups/RG-CaC-DEV-Avalanche/providers/Microsoft.Web/serverFarms/HostingPlan-CaC-DEV",
             "clientAffinityEnabled": true
         }
     }   
