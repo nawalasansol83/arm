@@ -30,10 +30,7 @@
             "type": "Microsoft.Web/sites",
             "comments": "** Azure Web App Provision **",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('microsoft.insights/components/',parameters('webappName'))]",
-                "[concat('Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]"
-            ],
+            "dependsOn": [],
             "properties": {
                 "name": "[parameters('webappName')]",
                 "siteConfig": {
@@ -57,10 +54,6 @@
                         {
                             "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
                             "value": "[variables('v_errorLink')]"
-                        },
-                        {
-                            "name": "CURRENT_STACK",
-                            "value": "[variables('v_currentStack')]"
                         }
                     ],
                     "phpVersion": "[variables('v_phpVersion')]",
