@@ -81,6 +81,9 @@
             "name": "[parameters('webappName')]",
             "type": "Microsoft.Insights/components",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('webappName'))]"
+            ],
             "properties": {
                 "ApplicationId": "[parameters('webappName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate"
