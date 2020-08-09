@@ -30,7 +30,6 @@
         "type": "Microsoft.Web/sites",
         "location": "[resourceGroup().location]",
         "tags": {},
-        "dependsOn": [],
         "properties": {
             "name": "[parameters('webappname')]",
             "siteConfig": {
@@ -49,7 +48,7 @@
                 "phpVersion": "[variables('v_phpVersion')]",
                 "alwaysOn": "[variables('v_alwaysOn')]"
             },
-            "serverFarmId": "[concat('/subscriptions/', variables('v_subscriptionId'),'/resourcegroups/', resourcegroup().name, '/providers/Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]",
+            "serverFarmId": "[concat('/subscriptions/', variables('v_subscriptionId'),'/resourcegroups/RG-CaC-DEV-Avalanche/providers/Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]",
             "clientAffinityEnabled": true
         }
     }   
