@@ -58,10 +58,16 @@
                             "value": "[variables('v_errorLink')]"
                         }
                     ],
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "[variables('v_currentStack')]"
+                        }
+                    ],
                     "phpVersion": "[variables('v_phpVersion')]",
                     "alwaysOn": "[variables('v_alwaysOn')]"
                 },
-                "serverFarmId": "[concat(variables('v_subscription'),'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', variables('v_hostingPlanName'))]",
+                "serverFarmId": "[resourceid('Microsoft.Web/serverfarms', variables('v_hostingPlanName'))]",
                 "hostingEnvironment": "[variables('v_hostingEnvironment')]",
                 "clientAffinityEnabled": true
             }
