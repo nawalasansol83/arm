@@ -19,30 +19,31 @@
         "v_phpVersion":"OFF",
         "v_hostingEnvironment":"",
         "v_alwaysOn":"true",
-        "v_errorLink":"[concat('https://', parameters('webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
-        "v_DEV_sample": "DEVValue"
+        "v_errorLink":"[concat('https://', varaibles('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
+        "v_DEV_sample": "DEVValue",
+        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',varaibles('v_webappName'))]"
     },
     "resources": [    
         {
-            "apiVersion": "2018-11-01",
-            "name": "[parameters('webappName')]",
             "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[varaibles('v_webappName')]",
             "comments": "** Azure Web App Provision **",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Insights/components', parameters('webappName'))]"
+                "[resourceId('Microsoft.Insights/components', varaibles('v_webappName'))]"
             ],
             "properties": {
-                "name": "[parameters('webappName')]",
+                "name": "[varaibles('v_webappName')]",
                 "siteConfig": {
                     "appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(concat('microsoft.insights/components/',parameters('webappName')), '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(concat('microsoft.insights/components/',varaibles('v_webappName')), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference(concat('microsoft.insights/components/',parameters('webappName')), '2015-05-01').ConnectionString]"
+                            "value": "[reference(concat('microsoft.insights/components/',varaibles('v_webappName')), '2015-05-01').ConnectionString]"
                         },
                         {
                             "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
@@ -78,10 +79,10 @@
         {
             "type": "Microsoft.Web/sites/config",
             "apiVersion": "2018-11-01",
-            "name": "[concat(parameters('webappName'), '/web')]",
+            "name": "[concat(varaibles('v_webappName'), '/web')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('webappName'))]"
+                "[resourceId('Microsoft.Web/sites', varaibles('v_webappName'))]"
             ],
             "properties": {
                 "ftpsState": "Disabled"
@@ -89,13 +90,13 @@
         },
         {
             "apiVersion": "2015-05-01",
-            "name": "[parameters('webappName')]",
+            "name": "[varaibles('v_webappName')]",
             "type": "Microsoft.Insights/components",
             "location": "[resourceGroup().location]",
             "dependsOn": [
             ],
             "properties": {
-                "ApplicationId": "[parameters('webappName')]",
+                "ApplicationId": "[varaibles('v_webappName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate"
             }
         }
