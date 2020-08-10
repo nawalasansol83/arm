@@ -21,7 +21,7 @@
         "v_alwaysOn":"true",
         "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
         "v_DEV_sample": "DEVValue",
-        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',variables('v_webappName'))]"
+        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]"
     },
     "resources": [    
         {
