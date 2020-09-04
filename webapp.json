@@ -20,7 +20,6 @@
         "v_hostingEnvironment":"",
         "v_alwaysOn":"true",
         "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
-        "v_DEV_sample": "DEVValue",
         "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]"
     },
     "resources": [    
@@ -56,10 +55,6 @@
                         {
                             "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
                             "value": "[variables('v_errorLink')]"
-                        },
-                        {
-                            "name": "OUTPUTVALUE",
-                            "value": "[variables(concat('v_',parameters('environment'),'_Sample'))]"
                         }
                     ],
                     "metadata": [
