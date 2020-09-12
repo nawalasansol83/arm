@@ -21,7 +21,7 @@
         "v_alwaysOn":"true",
         "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
         "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]",
-        "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment')]",
+        "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]",
         "v_virtualnetworkdId":"[resourceId('Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
         "v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'_MiddleTier')]"
     },
