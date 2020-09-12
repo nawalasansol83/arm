@@ -72,7 +72,31 @@
                 "serverFarmId": "[resourceid('Microsoft.Web/serverfarms', variables('v_hostingPlanName'))]",
                 "hostingEnvironment": "[variables('v_hostingEnvironment')]",
                 "clientAffinityEnabled": true,
-                "ftpsState": "Disabled"
+                "ftpsState": "Disabled",
+                "ipSecurityRestrictions": [
+                    {
+                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/AppGateway')]",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 1,
+                        "name": "AppGateway"
+                    },
+                    {
+                        "ipAddress": "0.0.0.0/32",
+                        "action": "Deny",
+                        "tag": "Default",
+                        "priority": 10,
+                        "name": "Block"
+                    },
+                    {
+                        "ipAddress": "Any",
+                        "action": "Deny",
+                        "priority": 2147483647,
+                        "name": "Deny all",
+                        "description": "Deny all access"
+                    }
+                ],
+
             },
             "resources": [
                 {
