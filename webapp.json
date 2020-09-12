@@ -20,7 +20,10 @@
         "v_hostingEnvironment":"",
         "v_alwaysOn":"true",
         "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
-        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]"
+        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]",
+        "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment')]",
+        "v_virtualnetworkdId":"[resourceId('Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
+        "v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'_MiddleTier')]"
     },
     "resources": [    
         {
@@ -80,7 +83,34 @@
                 "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
             ],
             "properties": {
-                "ftpsState": "Disabled"
+                "ftpsState": "Disabled",
+                "vnetName":"[variables('v_networkConnection')]"
+            }
+        },
+                {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('v_webappName'), '/', variables('v_webappName'), '.azurewebsites.net')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
+            ],
+            "properties": {
+                "siteName": "[variables('v_webappName')]",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/virtualNetworkConnections",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('v_networkConnection')]",
+            "location": "Canada Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
+            ],
+            "properties": {
+                "vnetResourceId": "[concat(variables('v_virtualnetworkdId'),'/subnets/MiddleTier')]",
+                "isSwift": true
             }
         },
         {
