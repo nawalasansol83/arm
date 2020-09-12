@@ -71,47 +71,23 @@
                 },
                 "serverFarmId": "[resourceid('Microsoft.Web/serverfarms', variables('v_hostingPlanName'))]",
                 "hostingEnvironment": "[variables('v_hostingEnvironment')]",
-                "clientAffinityEnabled": true
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2018-11-01",
-            "name": "[concat(variables('v_webappName'), '/web')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
-            ],
-            "properties": {
-                "ftpsState": "Disabled",
-                "vnetName":"[variables('v_networkConnection')]"
-            }
-        },
+                "clientAffinityEnabled": true,
+                "ftpsState": "Disabled"
+            },
+            "resources": [
                 {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2018-11-01",
-            "name": "[concat(variables('v_webappName'), '/', variables('v_webappName'), '.azurewebsites.net')]",
-            "location": "Canada Central",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
-            ],
-            "properties": {
-                "siteName": "[variables('v_webappName')]",
-                "hostNameType": "Verified"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/virtualNetworkConnections",
-            "apiVersion": "2018-11-01",
-            "name": "[variables('v_networkConnection')]",
-            "location": "Canada Central",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
-            ],
-            "properties": {
-                "vnetResourceId": "[concat(variables('v_virtualnetworkdId'),'/subnets/MiddleTier')]",
-                "isSwift": true
-            }
+                    "name": "virtualNetwork",
+                    "type": "networkConfig",
+                    "apiVersion": "2019-08-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
+                    ],
+                    "properties": {
+                        "subnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
+                        "swiftSupported": true
+                    }
+                }
+            ]
         },
         {
             "apiVersion": "2015-05-01",
