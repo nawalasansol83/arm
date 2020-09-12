@@ -72,6 +72,31 @@
                 "serverFarmId": "[resourceid('Microsoft.Web/serverfarms', variables('v_hostingPlanName'))]",
                 "hostingEnvironment": "[variables('v_hostingEnvironment')]",
                 "clientAffinityEnabled": true,
+            },
+            "resources": [
+                {
+                    "name": "virtualNetwork",
+                    "type": "networkConfig",
+                    "apiVersion": "2019-08-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
+                    ],
+                    "properties": {
+                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
+                        "swiftSupported": true
+                    }
+                }
+            ]
+        },
+                {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('v_webappName'), '/web')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [	           
+                "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
+            ],
+            "properties": {	
                 "ftpsState": "Disabled",
                 "ipSecurityRestrictions": [
                     {
@@ -96,22 +121,7 @@
                         "description": "Deny all access"
                     }
                 ],
-
-            },
-            "resources": [
-                {
-                    "name": "virtualNetwork",
-                    "type": "networkConfig",
-                    "apiVersion": "2019-08-01",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
-                    ],
-                    "properties": {
-                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
-                        "swiftSupported": true
-                    }
-                }
-            ]
+            }
         },
         {
             "apiVersion": "2015-05-01",
