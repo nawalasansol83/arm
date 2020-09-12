@@ -33,6 +33,9 @@
             "name": "[variables('v_webappName')]",
             "comments": "** Azure Web App Provision **",
             "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            }
             "dependsOn": [
                 "[resourceId('Microsoft.Insights/components', variables('v_webappName'))]"
             ],
