@@ -76,6 +76,7 @@
                 "serverFarmId": "[resourceid('Microsoft.Web/serverfarms', variables('v_hostingPlanName'))]",
                 "hostingEnvironment": "[variables('v_hostingEnvironment')]",
                 "clientAffinityEnabled": true,
+                "httpsOnly": true
             },
             "resources": [
                 {
@@ -92,7 +93,7 @@
                 }
             ]
         },
-                {
+        {
             "type": "Microsoft.Web/sites/config",
             "apiVersion": "2018-11-01",
             "name": "[concat(variables('v_webappName'), '/web')]",
