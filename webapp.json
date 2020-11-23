@@ -90,7 +90,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
                     ],
                     "properties": {
-                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
+                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment_Network'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
                         "swiftSupported": true
                     }
                 }
