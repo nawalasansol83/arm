@@ -115,6 +115,13 @@
                         "name": "AppGateway"
                     },
                     {
+                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/MiddleTier')]",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 2,
+                        "name": "MiddleTier"
+                    },
+                    {
                         "ipAddress": "0.0.0.0/32",
                         "action": "Deny",
                         "tag": "Default",
