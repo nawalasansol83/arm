@@ -120,7 +120,7 @@
                     },
                      {
                         "ipAddress": "204.101.159.162/30",
-                        "action": "[if(equals(parameters('environment'), 'RD'), 'Allow', 'Deny')]",
+                        "action": "[if(equals(parameters('environment'), 'DEV'), 'Allow', 'Deny')]",
                         "tag": "Default",
                         "priority": 3,
                         "name": "Valeyo-PublicIP"
