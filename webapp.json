@@ -110,7 +110,7 @@
                         "tag": "Default",
                         "priority": 1,
                         "name": "AppGateway"
-                    },
+                    },                                    
                     {
                         "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/MiddleTier')]",
                         "action": "Allow",
@@ -118,6 +118,13 @@
                         "priority": 2,
                         "name": "MiddleTier"
                     },
+                    {
+                        "ipAddress": "204.101.159.162/30",
+                        "action": "[if(equals(parameters('environment'), 'RD'), 'Allow', 'Deny')]",
+                        "tag": "Default",
+                        "priority": 3,
+                        "name": "MiddleTier"
+                    },   
                     {
                         "ipAddress": "0.0.0.0/32",
                         "action": "Deny",
