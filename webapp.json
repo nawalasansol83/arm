@@ -118,12 +118,12 @@
                         "priority": 2,
                         "name": "MiddleTier"
                     },
-                    {
+                     {
                         "ipAddress": "204.101.159.162/30",
                         "action": "[if(equals(parameters('environment'), 'RD'), 'Allow', 'Deny')]",
                         "tag": "Default",
                         "priority": 3,
-                        "name": "MiddleTier"
+                        "name": "Valeyo-PublicIP"
                     },   
                     {
                         "ipAddress": "0.0.0.0/32",
