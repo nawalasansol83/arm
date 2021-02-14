@@ -28,7 +28,7 @@
         "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]",
         "v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
         "v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
-        "v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'MiddleTier-Second')]"
+        "v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'MiddleTier')]"
     },
     "resources": [    
         {
@@ -99,7 +99,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
                     ],
                     "properties": {
-                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier-Second')]",
+                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
                         "swiftSupported": true
                     }
                 }
@@ -124,11 +124,11 @@
                         "name": "AppGateway"
                     },                                    
                     {
-                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/MiddleTier-Second')]",
+                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/MiddleTier')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 2,
-                        "name": "MiddleTier-Second"
+                        "name": "MiddleTier"
                     },
                      {
                         "ipAddress": "204.101.159.162/30",
