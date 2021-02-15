@@ -20,20 +20,16 @@
             "defaultValue": [""]
         },
         "storageNames": {
-          "type": "array",
-          "defaultValue": [
-            "contoso",
-            "fabrikam",
-            "coho"
-          ]
+          "type": "string",
+          "defaultValue": "ssdfsdf,sdfsdf,sdfdsfdsf,sdfdsfsdfdsf,"
       }
     },
     "variables": {
-        "Var_webappNameDistributedEnvName": "[split(parameters('webappNameDistributedEnvName'), ',')]"
+        "Var_webappNameDistributedEnvName": "[split(parameters('storageNames'), ',')]"
          "copy": [
             {
                 "name": "v_webappNameDistributedEnvName",
-                "count": "[parameters('webappNameDistributedEnvName')]",
+                "count": "[length(variables('Var_webappNameDistributedEnvName'))]",
                 "input": "[concat('WebApp-Cac-RD-',parameters('webappName'), variables('Var_webappNameDistributedEnvName')[copyIndex('v_webappNameDistributedEnvName')])]"
             }
         ],
