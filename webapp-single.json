@@ -45,6 +45,6 @@
     "outputs": {
         "arrayResult": {
             "type": "array",
-            "value": "[variables('myVariable')]"
+            "value": "[variables('ipaddresses')]"
         }
   }
