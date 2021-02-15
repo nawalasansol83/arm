@@ -32,7 +32,7 @@
             "count": "[length(variables('ipaddresses'))]",
             "input": {
                 "ipAddress": "[variables('ipaddresses')[copyIndex('myVariable')]]"
-            }
+                }
             }
         ]
         
