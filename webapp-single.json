@@ -21,9 +21,9 @@
             "allowedValues": [
                 "",
                 "-Alpha",
-                "Titan",
+                "-Titan",
                 "-Test",
-                "Donut"
+                "-Donut"
             ]
         }
     },
