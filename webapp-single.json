@@ -43,8 +43,5 @@
         
     ],
     "outputs": {
-        "arrayResult": {
-            "type": "array",
-            "value": "[variables('ipaddresses')]"
-        }
+       
   }
