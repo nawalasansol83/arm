@@ -14,8 +14,16 @@
         },
          "webappNameDistributedEnv":{
             "type": "string"
-        }
+        },
+      "webappNameDistributed": {
+          "type": "array",
+          "defaultValue": [
+            "Alpha",
+            "Titan"
+          ]
+      }
     },
+    
     "variables": {
         "v_skuCode":"P1v3",
         "v_hostingPlanName":"[concat('HostingPlan-',parameters('regionCode'),'-',parameters('environment'),'-',variables('v_skuCode'))]",
@@ -24,7 +32,7 @@
         "v_hostingEnvironment":"",
         "v_alwaysOn":"true",
         "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
-        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'),'-',parameters('webappNameDistributedEnv'))]",
+        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'),'-',parameters('webappNameDistributed')[copyIndex())]",
         "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]",
         "v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
         "v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
