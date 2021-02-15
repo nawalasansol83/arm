@@ -17,7 +17,7 @@
         },
         "webappNameDistributedEnvName":{
             "type": "array",
-            "defaultValue": "",
+            "defaultValue": [""],
             "allowedValues": [
                 "",
                 "-Alpha",
@@ -32,7 +32,7 @@
             {
                 "name": "v_webappNameDistributedEnvName",
                 "count": "[parameters('webappNameDistributedEnvName')]",
-                "input": "[concat(variables('v_webappName'), parameters('webappNameDistributedEnvName')[copyIndex())]"
+                "input": "[concat('WebApp-Cac-RD-',parameters('webappName'), parameters('webappNameDistributedEnvName')[copyIndex()])]"
             }
         ],
         "v_skuCode":"P1v3",
@@ -41,8 +41,8 @@
         "v_phpVersion":"OFF",
         "v_hostingEnvironment":"",
         "v_alwaysOn":"true",
-        "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
-        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]",
+        //"v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
+        //"v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]",
         "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]",
         "v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
         "v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]"
