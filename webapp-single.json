@@ -29,8 +29,13 @@
         //     }
         // ],
         "v_webappNameDistributedEnvName":{
-            "type":"array",
-            "value":"[concat('WebApp-Cac-RD-',parameters('webappName'), parameters('webappNameDistributedEnvName')[copyIndex()])]"
+               "copy": [
+            {
+                "name": "v_webappNameDistributedEnvName",
+                "count": "[length(parameters('webappNameDistributedEnvName'))]",
+                "input": "[concat('WebApp-Cac-RD-',parameters('webappName'), parameters('webappNameDistributedEnvName')[copyIndex()])]"
+            }
+         ]
         },
         "v_skuCode":"P1v3",
         "v_hostingPlanName":"[concat('HostingPlan-',parameters('regionCode'),'-',parameters('environment'),'-',variables('v_skuCode'))]",
