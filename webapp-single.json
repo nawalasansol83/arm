@@ -24,7 +24,7 @@
          "copy": [
             {
                 "name": "v_webappNameDistributedEnvName",
-                "count": "[parameters('webappNameDistributedEnvName')]",
+                "count": "[length(parameters('webappNameDistributedEnvName'))]",
                 "input": "[concat('WebApp-Cac-RD-',parameters('webappName'), parameters('webappNameDistributedEnvName')[copyIndex('v_webappNameDistributedEnvName')])]"
             }
         ],
