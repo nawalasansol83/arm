@@ -25,7 +25,7 @@
       }
     },
     "variables": {
-        "ipaddresses": "[split(parameters('defaultValue'), ',')]"
+        "ipaddresses": "[split(parameters('defaultValue'), ',')]",
         "copy": [
             {
             "name": "myVariable",
