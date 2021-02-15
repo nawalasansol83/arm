@@ -25,7 +25,7 @@
             {
                 "name": "v_webappNameDistributedEnvName",
                 "count": "[parameters('webappNameDistributedEnvName')]",
-                "input": "[concat('WebApp-Cac-RD-',parameters('webappName'), parameters('webappNameDistributedEnvName')[copyIndex()])]"
+                "input": "[concat('WebApp-Cac-RD-',parameters('webappName'), parameters('webappNameDistributedEnvName')[copyIndex('v_webappNameDistributedEnvName')])]"
             }
         ],
         "v_skuCode":"P1v3",
