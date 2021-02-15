@@ -17,14 +17,7 @@
         },
         "webappNameDistributedEnvName":{
             "type": "array",
-            "defaultValue": [""],
-            "allowedValues": [
-                "",
-                "-Alpha",
-                "-Titan",
-                "-Test",
-                "-Donut"
-            ]
+            "defaultValue": [""]
         }
     },
     "variables": {
