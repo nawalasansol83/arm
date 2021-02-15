@@ -25,17 +25,16 @@
       }
     },
     "variables": {
-        "Var_webappNameDistributedEnvName": "[split(parameters('storageNames'), ',')]"
-         "copy": [
+        "ipaddresses": "[split(parameters('defaultValue'), ',')]"
+        "copy": [
             {
-                "name": "v_webappNameDistributedEnvName",
-                "count": "[length(variables('Var_webappNameDistributedEnvName'))]",
-                "input": {
-                      "finalValue"  :"[concat('WebApp-Cac-RD-',parameters('webappName'), variables('Var_webappNameDistributedEnvName')[copyIndex('v_webappNameDistributedEnvName')])]"
-                } 
-                
+            "name": "myVariable",
+            "count": "[length(variables('ipaddresses'))]",
+            "input": {
+                "ipAddress": "[variables('ipaddresses')[copyIndex('myVariable')]]"
             }
-        ],
+            }
+        ]
         
     },
     "resources": [    
@@ -46,6 +45,6 @@
     "outputs": {
         "arrayResult": {
             "type": "array",
-            "value": "[variables('v_webappNameDistributedEnvName')]"
+            "value": "[variables('myVariable')]"
         }
   }
