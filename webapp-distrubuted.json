@@ -116,41 +116,7 @@
             "properties": {	
                 "ftpsState": "Disabled",
                 "ipSecurityRestrictions": [
-                    {
-                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/AppGateway')]",
-                        "action": "Allow",
-                        "tag": "Default",
-                        "priority": 1,
-                        "name": "AppGateway"
-                    },                                    
-                    {
-                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/MiddleTier-Second')]",
-                        "action": "Allow",
-                        "tag": "Default",
-                        "priority": 2,
-                        "name": "MiddleTier-Second"
-                    },
-                     {
-                        "ipAddress": "204.101.159.162/30",
-                        "action": "[if(equals(parameters('environment'), 'DEV'), 'Allow', 'Deny')]",
-                        "tag": "Default",
-                        "priority": 3,
-                        "name": "Valeyo-PublicIP"
-                    },   
-                    {
-                        "ipAddress": "0.0.0.0/32",
-                        "action": "Deny",
-                        "tag": "Default",
-                        "priority": 10,
-                        "name": "Block"
-                    },
-                    {
-                        "ipAddress": "Any",
-                        "action": "Deny",
-                        "priority": 2147483647,
-                        "name": "Deny all",
-                        "description": "Deny all access"
-                    }
+                   
                 ],
             }
         },
