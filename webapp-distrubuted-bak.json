@@ -1,0 +1,172 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment":{
+            "type": "string"
+        },
+        "regionCode":{
+            "defaultValue": "CaC",
+            "type": "string"
+        },        
+        "webappName":{
+            "type": "string"
+        },
+         "webappNameDistributedEnv":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "v_skuCode":"P1v3",
+        "v_hostingPlanName":"[concat('HostingPlan-',parameters('regionCode'),'-',parameters('environment'),'-',variables('v_skuCode'))]",
+        "v_currentStack":"dotnetcore",
+        "v_phpVersion":"OFF",
+        "v_hostingEnvironment":"",
+        "v_alwaysOn":"true",
+        "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
+        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'),parameters('webappNameDistributedEnv'))]",
+        "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]",
+        "v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
+        "v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
+        "v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'MiddleTier-Second')]"
+    },
+    "resources": [    
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('v_webappName')]",
+            "comments": "** Azure Web App Provision **",
+            "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/components', variables('v_webappName'))]"
+            ],
+            "properties": {
+                "name": "[variables('v_webappName')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(concat('microsoft.insights/components/',variables('v_webappName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[reference(concat('microsoft.insights/components/',variables('v_webappName')), '2015-05-01').ConnectionString]"
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_Mode",
+                            "value": "default"
+                        },
+                        {
+                            "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
+                            "value": "[variables('v_errorLink')]"
+                        },
+                        {
+                            "name": "WEBSITE_DNS_SERVER",
+                            "value": "168.63.129.16"
+                        },
+                        {
+                            "name": "WEBSITE_VNET_ROUTE_ALL",
+                            "value": "1"
+                        }
+                    ],
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "[variables('v_currentStack')]"
+                        }
+                    ],
+                    "phpVersion": "[variables('v_phpVersion')]",
+                    "alwaysOn": "[variables('v_alwaysOn')]"
+                },
+                "serverFarmId": "[resourceid('Microsoft.Web/serverfarms', variables('v_hostingPlanName'))]",
+                "hostingEnvironment": "[variables('v_hostingEnvironment')]",
+                "clientAffinityEnabled": true,
+                "httpsOnly": true
+            },
+            "resources": [
+                {
+                    "name": "virtualNetwork",
+                    "type": "networkConfig",
+                    "apiVersion": "2019-08-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
+                    ],
+                    "properties": {
+                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier-Second')]",
+                        "swiftSupported": true
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('v_webappName'), '/web')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [	           
+                "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
+            ],
+            "properties": {	
+                "ftpsState": "Disabled",
+                "ipSecurityRestrictions": [
+                    {
+                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/AppGateway')]",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 1,
+                        "name": "AppGateway"
+                    },                                    
+                    {
+                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/MiddleTier-Second')]",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 2,
+                        "name": "MiddleTier-Second"
+                    },
+                     {
+                        "ipAddress": "204.101.159.162/30",
+                        "action": "[if(equals(parameters('environment'), 'DEV'), 'Allow', 'Deny')]",
+                        "tag": "Default",
+                        "priority": 3,
+                        "name": "Valeyo-PublicIP"
+                    },   
+                    {
+                        "ipAddress": "0.0.0.0/32",
+                        "action": "Deny",
+                        "tag": "Default",
+                        "priority": 10,
+                        "name": "Block"
+                    },
+                    {
+                        "ipAddress": "Any",
+                        "action": "Deny",
+                        "priority": 2147483647,
+                        "name": "Deny all",
+                        "description": "Deny all access"
+                    }
+                ],
+            }
+        },
+        {
+            "apiVersion": "2015-05-01",
+            "name": "[variables('v_webappName')]",
+            "type": "Microsoft.Insights/components",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+            ],
+            "properties": {
+                "ApplicationId": "[variables('v_webappName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate"
+            }
+        }
+    ],
+    "outputs": {
+    }
+  }
