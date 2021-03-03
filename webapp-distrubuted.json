@@ -25,10 +25,10 @@
         "v_alwaysOn":"true",
         "v_errorLink":"[concat('https://', variables('v_webappName'),'.scm.azurewebsites.net/detectors?type=tools&name=eventviewer')]",
         "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'),parameters('webappNameDistributedEnv'))]",
-        "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]",
-        "v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
-        "v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
-        "v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'MiddleTier-Second')]"
+        "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]"
+        //"v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
+        //"v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
+        //"v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'MiddleTier')]"
     },
     "resources": [    
         {
@@ -60,8 +60,44 @@
                             "value": "~2"
                         },
                         {
+                            "name": "DiagnosticServices_EXTENSION_VERSION",
+                            "value": "~3",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "InstrumentationEngine_EXTENSION_VERSION",
+                            "value": "~1",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "SnapshotDebugger_EXTENSION_VERSION",
+                            "value": "~1",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+                            "value": "1.0.0",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+                            "value": "1.0.0",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+                            "value": "~1",
+                            "slotSetting": true
+                        },
+                        {
                             "name": "XDT_MicrosoftApplicationInsights_Mode",
-                            "value": "default"
+                            "value": "recommended",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
+                            "value": "1",
+                            "slotSetting": true
                         },
                         {
                             "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
@@ -99,7 +135,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('v_webappName'))]"
                     ],
                     "properties": {
-                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier-Second')]",
+                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
                         "swiftSupported": true
                     }
                 }
