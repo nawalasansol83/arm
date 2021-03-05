@@ -142,6 +142,10 @@
                     "properties": {
                         "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
                         "swiftSupported": true
+                    },
+                    "copy": {
+                        "name": "ReleseEnvironmentName",
+                        "count": "[length(parameters('webappNameDistributedEnv'))]"
                     }
                 }
             ]
