@@ -1,0 +1,179 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment":{
+            "type": "string"
+        },
+        "regionCode":{
+            "defaultValue": "CaC",
+            "type": "string"
+        },        
+        "webappName":{
+            "type": "string"
+        },
+         "webappNameDistributedEnv":{
+            "type": "array"
+        }
+    },
+    "variables": {
+        "v_skuCode":"P2V3",
+        "v_hostingPlanName":"[concat('HostingPlan-',parameters('regionCode'),'-',parameters('environment'))]",
+        "v_currentStack":"dotnetcore",
+        "v_phpVersion":"OFF",
+        "v_hostingEnvironment":"",
+        "v_alwaysOn":"true",
+        "v_errorLinkPrefix":"[concat('https://', variables('v_webappName'))]",
+        "v_errorLinkSuffix":".scm.azurewebsites.net/detectors?type=tools&name=eventviewer')",
+        "v_webappName":"[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]",
+        "v_vnetName":"[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]"
+        //"v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
+        //"v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
+        //"v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'MiddleTier')]"
+    },
+    "resources": [    
+        {
+            "copy": {
+                "name": "ReleseEnvironmentName",
+                "count": "[length(parameters('webappNameDistributedEnv'))]"
+            },
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])]",
+            "comments": "** Azure Web App Provision **",
+            "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/components', concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()]))]"
+            ],
+            "properties": {
+                "name": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(concat('microsoft.insights/components/',concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[reference(concat('microsoft.insights/components/',concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])), '2015-05-01').ConnectionString]"
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "DiagnosticServices_EXTENSION_VERSION",
+                            "value": "~3",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "InstrumentationEngine_EXTENSION_VERSION",
+                            "value": "~1",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "SnapshotDebugger_EXTENSION_VERSION",
+                            "value": "~1",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+                            "value": "1.0.0",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+                            "value": "1.0.0",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+                            "value": "~1",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_Mode",
+                            "value": "recommended",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
+                            "value": "1",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
+                            "value": "[concat(variables('v_errorLinkPrefix'),parameters('webappNameDistributedEnv')[copyIndex()],variables('v_errorLinkSuffix'))]"
+                        },
+                        {
+                            "name": "WEBSITE_DNS_SERVER",
+                            "value": "168.63.129.16"
+                        },
+                        {
+                            "name": "WEBSITE_VNET_ROUTE_ALL",
+                            "value": "1"
+                        }
+                    ],
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "[variables('v_currentStack')]"
+                        }
+                    ],
+                    "phpVersion": "[variables('v_phpVersion')]",
+                    "alwaysOn": "[variables('v_alwaysOn')]"
+                },
+                "serverFarmId": "[resourceid('Microsoft.Web/serverfarms', variables('v_hostingPlanName'))]",
+                "hostingEnvironment": "[variables('v_hostingEnvironment')]",
+                "clientAffinityEnabled": true,
+                "httpsOnly": true
+            },
+            "resources": [
+                {
+                    "name": "virtualNetwork",
+                    "type": "networkConfig",
+                    "apiVersion": "2019-08-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()]))]"
+                    ],
+                    "properties": {
+                        "subnetResourceId": "[resourceId(concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network'),'Microsoft.Network/virtualNetworks/subnets', variables('v_vnetName'), 'MiddleTier')]",
+                        "swiftSupported": true
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()], '/web')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [	           
+                "[resourceId('Microsoft.Web/sites', concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()]))]"
+            ],
+            "properties": {	
+                "ftpsState": "Disabled",
+                "ipSecurityRestrictions": [
+                   
+                ],
+            }
+        },
+        {
+            "apiVersion": "2015-05-01",
+            "name": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])]",
+            "type": "Microsoft.Insights/components",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+            ],
+            "properties": {
+                "ApplicationId": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])]",
+                "Request_Source": "IbizaWebAppExtensionCreate"
+            }
+        }
+    ],
+    "outputs": {
+    }
+  }
