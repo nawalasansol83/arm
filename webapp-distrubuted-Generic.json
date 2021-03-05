@@ -145,7 +145,7 @@
             ],
             "copy": {
                 "name": "WebAppSetup",
-                "count": "[parameters('webappNameDistributedEnv')]"
+                "count": "[length(parameters('webappNameDistributedEnv'))]"
             }
         }
 
