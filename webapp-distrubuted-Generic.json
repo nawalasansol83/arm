@@ -159,6 +159,10 @@
                 "ipSecurityRestrictions": [
                    
                 ],
+            },
+              "copy": {
+                "name": "ReleseEnvironmentName",
+                "count": "[length(parameters('webappNameDistributedEnv'))]"
             }
         },
         {
@@ -171,6 +175,10 @@
             "properties": {
                 "ApplicationId": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])]",
                 "Request_Source": "IbizaWebAppExtensionCreate"
+            },
+              "copy": {
+                "name": "ReleseEnvironmentName",
+                "count": "[length(parameters('webappNameDistributedEnv'))]"
             }
         }
     ],
