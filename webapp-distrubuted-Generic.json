@@ -26,9 +26,9 @@
         "v_errorLinkPrefix": "[concat('https://', variables('v_webappName'))]",
         "v_errorLinkSuffix": ".scm.azurewebsites.net/detectors?type=tools&name=eventviewer')",
         "v_webappName": "[concat('WebApp-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webappName'))]",
-        "v_vnetName": "[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]"
-        //"v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
-        //"v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]",
+        "v_vnetName": "[concat('VNET-',parameters('regionCode'),'-',parameters('environment'))]",
+        "v_vnetRG":"[concat('RG-',parameters('regionCode'),'-',parameters('environment'),'-Network')]",
+        "v_virtualnetworkdId":"[resourceId(variables('v_vnetRG'),'Microsoft.Network/virtualNetworks',variables('v_vnetName'))]"
         //"v_networkConnection":"[concat(variables('v_webappName'), '/', uniquestring(variables('v_webappName')),'MiddleTier')]"
     },
 
@@ -159,7 +159,48 @@
             "properties": {
                 "ftpsState": "Disabled",
                 "ipSecurityRestrictions": [
-
+{
+                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/AppGateway')]",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 1,
+                        "name": "AppGateway"
+                    },                                    
+                    {
+                        "vnetSubnetResourceId": "[concat(variables('v_virtualnetworkdId'), '/subnets/MiddleTier')]",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 2,
+                        "name": "MiddleTier"
+                    },
+                     {
+                        "ipAddress": "204.101.159.162/30",
+                        "action": "[if(equals(parameters('environment'), 'DEV'), 'Allow', 'Deny')]",
+                        "tag": "Default",
+                        "priority": 3,
+                        "name": "Valeyo-PublicIP"
+                    }, 
+                    {
+                        "ipAddress": "99.229.211.39",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 3,
+                        "name": "Nawals-Ip"
+                    },  
+                    {
+                        "ipAddress": "0.0.0.0/32",
+                        "action": "Deny",
+                        "tag": "Default",
+                        "priority": 10,
+                        "name": "Block"
+                    },
+                    {
+                        "ipAddress": "Any",
+                        "action": "Deny",
+                        "priority": 2147483647,
+                        "name": "Deny all",
+                        "description": "Deny all access"
+                    }
                 ]
             },
             "copy": {
