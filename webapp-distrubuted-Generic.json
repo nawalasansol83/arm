@@ -181,13 +181,6 @@
                         "name": "Valeyo-PublicIP"
                     },
                     {
-                        "ipAddress": "99.229.211.39",
-                        "action": "Allow",
-                        "tag": "Default",
-                        "priority": 3,
-                        "name": "Nawals-Ip"
-                    },
-                    {
                         "ipAddress": "0.0.0.0/32",
                         "action": "Deny",
                         "tag": "Default",
