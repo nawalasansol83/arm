@@ -1,0 +1,31 @@
+{
+    "contentversion":"1.0.0.0",
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "parameters":{
+       "VNetSettings":{"type":"object"},
+       "noofsubnets":
+         {
+           "type":"int"
+         }
+      },
+    "variables":
+     {
+       "vnetname":"[parameters('VNetSettings').name]"
+     },
+   "resources":
+   [
+   {
+   "type":"Microsoft.Network/virtualNetworks/subnets",
+   "name": "[concat(variables('vnetname'), '/',parameters('VNetSettings').subnets[copyIndex()].name)]",
+   "apiVersion": "2015-06-15",
+   "location":"[resourceGroup().location]",
+   "properties":{
+      "addressPrefix": "[parameters('VNetSettings').subnets[copyIndex()].addressPrefix]"
+     },
+   "copy":{
+       "name":"subnetcopy",
+       "count":"[parameters('noofsubnets')]"
+       }
+    }
+ ]
+}
