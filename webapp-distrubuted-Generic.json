@@ -148,6 +148,25 @@
                 "count": "[length(parameters('webappNameDistributedEnv'))]"
             }
         },
+           {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()], '/web')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()]))]"
+            ],
+            "properties": {
+                "ftpsState": "Disabled",
+                "ipSecurityRestrictions": [
+
+                ]
+            },
+            "copy": {
+                "name": "ReleseEnvironmentName",
+                "count": "[length(parameters('webappNameDistributedEnv'))]"
+            }
+        },
         {
             "apiVersion": "2015-05-01",
             "name": "[concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])]",
