@@ -181,7 +181,7 @@
                     },
                     {
                         "ipAddress": "99.229.211.39/32",
-                        "action": "Allow",
+                        "action": "[if(equals(parameters('environment'), 'PROD'), 'Deny', 'Allow')]",
                         "tag": "Default",
                         "priority": 3,
                         "name": "Nawal-PublicIP"
