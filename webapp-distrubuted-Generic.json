@@ -17,7 +17,6 @@
         }
     },
     "variables": {
-        "v_skuCode": "P2V3",
         "v_hostingPlanName": "[concat('HostingPlan-',parameters('regionCode'),'-',parameters('environment'))]",
         "v_currentStack": "dotnetcore",
         "v_phpVersion": "OFF",
@@ -51,16 +50,19 @@
                     "appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(concat('microsoft.insights/components/',concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])), '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(concat('microsoft.insights/components/',concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])), '2015-05-01').InstrumentationKey]",
+                            "slotSetting": true
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference(concat('microsoft.insights/components/',concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])), '2015-05-01').ConnectionString]"
+                            "value": "[reference(concat('microsoft.insights/components/',concat(variables('v_webappName'),parameters('webappNameDistributedEnv')[copyIndex()])), '2015-05-01').ConnectionString]",
+                            "slotSetting": true
                             
                         },
                         {
                             "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
-                            "value": "~2"
+                            "value": "~2",
+                            "slotSetting": true
                         },
                         {
                             "name": "DiagnosticServices_EXTENSION_VERSION",
@@ -178,17 +180,24 @@
                         "name": "MiddleTier"
                     },
                     {
+                        "ipAddress": "99.229.211.39",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 3,
+                        "name": "Nawal-PublicIP"
+                    },
+                    {
                         "ipAddress": "204.101.159.162/30",
                         "action": "[if(equals(parameters('environment'), 'DEV'), 'Allow', 'Deny')]",
                         "tag": "Default",
-                        "priority": 3,
+                        "priority": 99,
                         "name": "Valeyo-PublicIP"
                     },
                     {
                         "ipAddress": "0.0.0.0/32",
                         "action": "Deny",
                         "tag": "Default",
-                        "priority": 10,
+                        "priority": 100,
                         "name": "Block"
                     },
                     {
