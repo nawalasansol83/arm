@@ -180,7 +180,7 @@
                         "name": "MiddleTier"
                     },
                     {
-                        "ipAddress": "99.229.211.39",
+                        "ipAddress": "99.229.211.39/32",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 3,
