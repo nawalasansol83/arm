@@ -21,10 +21,7 @@
                 "CaE"
             ]
         },
-        "kv_networkAcls": {
-            "type": "object"
-        },
-        "webappNameDistributedEnv":{
+       "webappNameDistributedEnv":{
              "type":"string"
         },
         "webAppArray":{
