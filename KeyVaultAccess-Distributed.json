@@ -1,0 +1,73 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment":{
+            "type": "string",
+            "defaultValue": "DEV",
+            "allowedValues": [
+                "DEV",
+                "UAT",
+                "QA",
+                "PROD",
+                "RD"
+            ]
+        },
+        "regionCode":{
+            "type": "string",
+            "defaultValue": "CaC",
+            "allowedValues": [
+                "CaC",
+                "CaE"
+            ]
+        },
+        "kv_networkAcls": {
+            "type": "object"
+        },
+        "webappNameDistributedEnv":{
+             "type":"string"
+        },
+        "webAppArray":{
+            "type" :"array"
+        }
+    },
+    "variables": {
+        "v_keyvaultName":"[concat('KV-',parameters('regionCode'),'-',parameters('environment'),'-Avalanche')]",
+        //"v_msiAppGW":"[concat('AppGW-MSI-',parameters('environment'))]"
+        //"v_msiAppGWId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('v_msiAppGW'))]" 
+        "v_releaseEnvName": "[if(equals(parameters('webappNameDistributedEnv'), ''), '', parameters('webappNameDistributedEnv'))]"
+    },
+    "resources": [
+                
+        {
+            "type": "Microsoft.KeyVault/vaults/accessPolicies", 
+            "name": "[concat(variables('v_keyvaultName'), '/add')]",
+            "apiVersion": "2019-09-01",           
+            "properties": {                
+                "copy" : [
+                    {
+
+                    "name": "accessPolicies",
+                    "count": "[length(parameters('webAppArray'))]",
+                        "input": {
+                            "tenantId":"[subscription().tenantId]",
+                            "objectId": "[reference(resourceId('Microsoft.Web/sites', concat('WebApp','-',parameters('regionCode'),'-',parameters('environment'),'-',parameters('webAppArray')[CopyIndex('accessPolicies')], variables('v_releaseEnvName'))), '2016-08-01', 'Full').identity.principalId]",
+                            "permissions": {
+                                "keys": [  "get", "list" ],
+                                "secrets": [  "get", "list" ],
+                                "certificates": [  "get", "list" ]
+                            }
+                        }
+                    }
+                ]             
+               
+            }
+        }
+    ],
+    "outputs": {
+        "out_rgLocation": {
+            "type": "string",
+            "value": "[resourceGroup().name]"
+        }
+    }
+}
